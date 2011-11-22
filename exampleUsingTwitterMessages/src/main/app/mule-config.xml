@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
+
 
     Mule Amazon Connector
 
@@ -17,7 +17,7 @@
       xmlns:scripting="http://www.mulesoft.org/schema/mule/scripting"
       xmlns:context="http://www.springframework.org/schema/context"
       xmlns:mongo="http://www.mulesoft.org/schema/mule/mongo"
-      xmlns:twitter="http://repository.mulesoft.org/releases/org/mule/modules/mule-module-twitter"
+      xmlns:twitter="http://www.mulesoft.org/schema/mule/twitter"
       xmlns:json="http://www.mulesoft.org/schema/mule/json"
       xsi:schemaLocation="
             http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
@@ -27,9 +27,14 @@
             http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/3.0/mule-http.xsd
             http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/json/3.2/mule-json.xsd
             http://www.mulesoft.org/schema/mule/mongo http://www.mulesoft.org/schema/mule/mongo/2.0/mule-mongo.xsd
-            http://repository.mulesoft.org/releases/org/mule/modules/mule-module-twitter http://repository.mulesoft.org/releases/org/mule/modules/mule-module-twitter/2.3/mule-twitter.xsd
+            http://www.mulesoft.org/schema/mule/twitter http://www.mulesoft.org/schema/mule/twitter/2.3/mule-twitter.xsd
             http://www.mulesoft.org/schema/mule/sqs http://www.mulesoft.org/schema/mule/sqs/1.0/mule-sqs.xsd">
                           
+    <twitter:config consumerKey="${twitterConsumerKey}" 
+                    consumerSecret="${twitterConsumerSecret}" 
+                    accessKey="${twitterAccessKey}" 
+                    accessSecret="${twitterAccessSecret}"/>
+                                              
     <http:connector name="connector.http.mule.default"
                     enableCookies="true" 
                     keepAlive="true"/>
@@ -37,40 +42,37 @@
     <sqs:config accessKey="${sqsAccessKey}" 
                 secretAccessKey="${sqsSecretAccessKey}"
                 queueName="mule-test"/>
-                
-    <twitter:config consumerKey="${twitterConsumerKey}" 
-                    consumerSecret="${twitterConsumerSecret}" 
-                    accessKey="${twitterAccessKey}" 
-                    accessSecret="${twitterAccessSecret}"/>
     
-    <mongo:config  name="twitterDB"  
-                   username="blablabla"
-                   password="blablabla" />
+    <mongo:config username="${mongoUsername}"
+                  password="${mongoPassword}" />
     
     <flow name="producer">
         <description>Gets at least 20 most recent twitter statuses posted from the authenticating user, and one by one, add them to the queue.</description>
         <inbound-endpoint address="http://localhost:9090/get-tweets-to-save"/>
-        <twitter:get-user-timeline count = "20"/> 
+        <twitter:get-user-timeline count = "20"/>
         <collection-splitter/>
-        <expression-transformer expression='return payload.getText()' evaluator="groovy"/>        
+        <expression-transformer expression='return payload.getText()' evaluator="groovy"/>
+        <expression-transformer expression="Prueba" evaluator="string"/>
+        <logger level="ERROR" message="PUSH TO THE QUEUE: #[payload]" />
         <sqs:send-message/>
     </flow>
     
    <flow name="consumer">
         <description>Get a message from the queue, and add it to a mongo DB</description>
-        <sqs:receive-messages/>
+        <sqs:receive-messages retries="3" />
         <scripting:component>
             <scripting:script engine="groovy">
                 <![CDATA[
-                import org.apache.commons.lang.StringEscapeUtils;
+                 import org.apache.commons.lang.StringEscapeUtils; 
                 
-                String str = " { ";
-                str += "\"text\" : \"" + StringEscapeUtils.escapeJavaScript(payload) + "\" } ";
+                 String str = " { "; 
+                 str += "\"text\" : \"" + StringEscapeUtils.escapeJavaScript(payload) + "\" } "; 
                 
-                return str;      
-                ]]>
+                 return str;       
+                 ]]> 
             </scripting:script>
         </scripting:component>
+        <logger level="ERROR" message="FROM THE QUEUE: #[payload]" />
         <expression-transformer expression=' #[payload] ' evaluator="string"/>
         <mongo:json-to-dbobject />
         <mongo:insert-object  collection="status" dbObject-ref='#[payload]'/>

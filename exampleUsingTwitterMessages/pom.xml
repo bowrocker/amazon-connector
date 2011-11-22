@@ -10,12 +10,11 @@
 
     <properties>
         <mule.version>3.2.0</mule.version>
-        <mule.devkit.version>3.0.1-SNAPSHOT</mule.devkit.version>
+        <mule.devkit.version>LATEST</mule.devkit.version>
         <junit.version>4.8.2</junit.version>
         <mule.amazon.version>1.0-SNAPSHOT</mule.amazon.version>
         <mule.twitter.version>2.4-SNAPSHOT</mule.twitter.version>
         <mule.mongo.version>2.0-SNAPSHOT</mule.mongo.version>
-        <ibeans.version>1.1</ibeans.version>
     </properties>
 
     <description>Example using twitter statuses, adding them to an Amazon queue; and then insert each in a mongo db.</description>
@@ -67,14 +66,6 @@
                     <inclusions>
                         <inclusion>
                             <groupId>org.mule.modules</groupId>
-                            <artifactId>mule-module-amazon</artifactId>
-                        </inclusion>
-                        <inclusion>
-                            <groupId>org.mule.modules</groupId>
-                            <artifactId>mule-module-mongo</artifactId>
-                        </inclusion>
-                        <inclusion>
-                            <groupId>org.mule.modules</groupId>
                             <artifactId>mule-module-twitter</artifactId>
                         </inclusion>
                         <inclusion>
@@ -120,21 +111,6 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.ibeans</groupId>
-            <artifactId>ibeans-support</artifactId>
-            <version>${ibeans.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.mule.modules</groupId>
-            <artifactId>mule-module-ognl</artifactId>
-            <version>${mule.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.mule.modules</groupId>
-            <artifactId>mule-module-ibeans</artifactId>
-            <version>${mule.version}</version>
-        </dependency>
-        <dependency>
             <groupId>org.mule.modules</groupId>
             <artifactId>mule-module-scripting</artifactId>
             <version>${mule.version}</version>
@@ -167,12 +143,6 @@
             <id>codehaus-repo</id>
             <name>Codehaus Repository</name>
             <url>http://dist.codehaus.org/mule/dependencies/maven2</url>
-            <layout>default</layout>
-        </repository>
-        <repository>
-            <id>ibeans-repo</id>
-            <name>iBeans Repository</name>
-            <url>http://repository.ibeans.muleforge.org</url>
             <layout>default</layout>
         </repository>
     </repositories>

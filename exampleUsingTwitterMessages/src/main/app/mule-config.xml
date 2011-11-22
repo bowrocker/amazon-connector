@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
+<!-- 
 
     Mule Amazon Connector
 
@@ -13,28 +13,24 @@
 <mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xmlns:spring="http://www.springframework.org/schema/beans"
       xmlns:http="http://www.mulesoft.org/schema/mule/http"
-      xmlns:sqs="http://www.mulesoft.org/schema/mule/sqs"
-      xmlns:scripting="http://www.mulesoft.org/schema/mule/scripting"
       xmlns:context="http://www.springframework.org/schema/context"
-      xmlns:mongo="http://www.mulesoft.org/schema/mule/mongo"
       xmlns:twitter="http://www.mulesoft.org/schema/mule/twitter"
-      xmlns:json="http://www.mulesoft.org/schema/mule/json"
       xsi:schemaLocation="
             http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
             http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
             http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/3.2/mule.xsd
-            http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mule/scripting/3.2/mule-scripting.xsd
             http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/3.0/mule-http.xsd
-            http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/json/3.2/mule-json.xsd
-            http://www.mulesoft.org/schema/mule/mongo http://www.mulesoft.org/schema/mule/mongo/2.0/mule-mongo.xsd
             http://www.mulesoft.org/schema/mule/twitter http://www.mulesoft.org/schema/mule/twitter/2.3/mule-twitter.xsd
-            http://www.mulesoft.org/schema/mule/sqs http://www.mulesoft.org/schema/mule/sqs/1.0/mule-sqs.xsd">
+            
+            ">
                           
-    <twitter:config consumerKey="${twitterConsumerKey}" 
-                    consumerSecret="${twitterConsumerSecret}" 
-                    accessKey="${twitterAccessKey}" 
-                    accessSecret="${twitterAccessSecret}"/>
+                          
+    <twitter:config  consumerKey='dsdfsd'
+	consumerSecret='dsadsa'
+	accessKey='fdsfsdf'
+	accessSecret='sdfsdf' />
                                               
+<!--     
     <http:connector name="connector.http.mule.default"
                     enableCookies="true" 
                     keepAlive="true"/>
@@ -45,7 +41,6 @@
     
     <mongo:config username="${mongoUsername}"
                   password="${mongoPassword}" />
-    
     <flow name="producer">
         <description>Gets at least 20 most recent twitter statuses posted from the authenticating user, and one by one, add them to the queue.</description>
         <inbound-endpoint address="http://localhost:9090/get-tweets-to-save"/>
@@ -77,5 +72,5 @@
         <mongo:json-to-dbobject />
         <mongo:insert-object  collection="status" dbObject-ref='#[payload]'/>
     </flow>
-
+-->
 </mule>

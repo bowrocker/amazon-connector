@@ -34,6 +34,7 @@ import org.slf4j.LoggerFactory;
 import com.xerox.amazonws.sqs2.Message;
 import com.xerox.amazonws.sqs2.MessageQueue;
 import com.xerox.amazonws.sqs2.QueueAttribute;
+import com.xerox.amazonws.sqs2.QueueService;
 import com.xerox.amazonws.sqs2.SQSException;
 import com.xerox.amazonws.sqs2.SQSUtils;
 
@@ -77,7 +78,8 @@ public class SQSConnector {
     public void connect(@ConnectionKey String queueName)
             throws ConnectionException {
         try {
-            msgQueue = SQSUtils.connectToQueue(queueName, accessKey, secretAccessKey);
+        	QueueService qs = SQSUtils.getQueueService(accessKey, secretAccessKey, null);
+            msgQueue = SQSUtils.getQueueOrElse(qs, queueName);
             msgQueue.setEncoding(false);
         } catch (SQSException e) {
             throw new ConnectionException(ConnectionExceptionCode.UNKNOWN, null, e.getMessage(), e);

@@ -78,7 +78,7 @@ public class SQSConnector {
     public void connect(@ConnectionKey String queueName)
             throws ConnectionException {
         try {
-        	QueueService qs = SQSUtils.getQueueService(accessKey, secretAccessKey, null);
+            QueueService qs = SQSUtils.getQueueService(accessKey, secretAccessKey, null);
             msgQueue = SQSUtils.getQueueOrElse(qs, queueName);
             msgQueue.setEncoding(false);
         } catch (SQSException e) {
